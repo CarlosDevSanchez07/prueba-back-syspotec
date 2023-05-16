@@ -1,0 +1,30 @@
+version: '3'
+services:
+    backend:
+        container_name: test-backend
+        volumes:
+            - ./:/usr/src/app:cached
+            - /usr/src/app/node_modules
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: npm run start:dev
+        ports:
+            - '3000:3000'
+        links:
+            - mongo
+        depends_on:
+            - mongo
+        environment:
+            - MONGO_HOST=mongo
+            - MONGO_PORT=27017
+    mongo:
+        container_name: mongo
+        image: mongo
+        ports:
+            - '27017:27017'
+        volumes:  
+            - mongodb:/data/db
+volumes:
+    mongodb:
